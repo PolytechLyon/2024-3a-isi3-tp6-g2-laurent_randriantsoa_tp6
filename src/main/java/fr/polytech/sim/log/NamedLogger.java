@@ -7,6 +7,8 @@ package fr.polytech.sim.log;
 public abstract class NamedLogger implements Logger {
     final protected String name;
 
+    protected String message;
+
     /**
      * Constructor.
      *
@@ -14,6 +16,12 @@ public abstract class NamedLogger implements Logger {
      */
     protected NamedLogger(String name) {
         this.name = name;
+    }
+
+    @Override
+    public void log(String format, Object... args) {
+        String entry = String.format(format, args);
+        this.message = String.format("%s\t%s\n", this.name, entry);
     }
 
 }
