@@ -121,42 +121,27 @@ synchronized public void log(String format, Object... args) {
 
 ## Exercices 6
 
-Classe Abstraite LoggerFactory
+Interface LoggerFactory
 ```java
-public abstract class LoggerFactory {
+package fr.polytech.sim.log;
 
-    public static Logger createLogger(String name) {
-        return null;
-    }
+public interface LoggerFactory {
 
-}
-
-```
-Classe ConsoleLoggerFactory
-````java
-public class ConsoleLoggerFactory {
-
-    public static Logger createLogger(String name) {
+    static Logger createLogger(String name) {
         return new ConsoleLogger(name);
     }
+
 }
 
-````
-Classe FileLoggerFactory
-````java
-public class FileLoggerFactory extends LoggerFactory {
 
-    public static Logger createLogger(String name) {
-        return new FileLogger(name);
-    }
-}
-````
+```
 
 Le patron de conception "Méthode de Fabrique" centralise le processus de création d'objets en fournissant une interface commune avec une méthode abstraite pour créer des instances, tandis que les sous-classes concrètes fournissent l'implémentation spécifique. Il permet de déléguer la création d'objets à des sous-classes tout en préservant l'encapsulation. Contrairement au patron Singleton qui garantit une seule instance d'une classe, la méthode de fabrique est utilisée pour créer des instances variées d'une même interface ou classe abstraite. Ce patron offre une flexibilité dans le choix de l'implémentation des objets, favorisant ainsi la maintenabilité et la réutilisabilité du code. Son utilisation centralise le choix de la réalisation d'une interface à un seul endroit dans le code.
 
 ## Exercices 7
 
 ## Exercices 8
+Effectuer un commit avant
 
 ## Exercices 9
 
