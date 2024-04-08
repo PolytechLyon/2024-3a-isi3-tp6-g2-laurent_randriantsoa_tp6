@@ -135,6 +135,7 @@ public interface LoggerFactory {
 
 
 ```
+De plus on modifie tous les new Logger par des LoggerFactory.creatLogger()
 
 Le patron de conception "Méthode de Fabrique" centralise le processus de création d'objets en fournissant une interface commune avec une méthode abstraite pour créer des instances, tandis que les sous-classes concrètes fournissent l'implémentation spécifique. Il permet de déléguer la création d'objets à des sous-classes tout en préservant l'encapsulation. Contrairement au patron Singleton qui garantit une seule instance d'une classe, la méthode de fabrique est utilisée pour créer des instances variées d'une même interface ou classe abstraite. Ce patron offre une flexibilité dans le choix de l'implémentation des objets, favorisant ainsi la maintenabilité et la réutilisabilité du code. Son utilisation centralise le choix de la réalisation d'une interface à un seul endroit dans le code.
 
