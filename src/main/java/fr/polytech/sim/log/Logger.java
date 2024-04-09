@@ -4,6 +4,7 @@ package fr.polytech.sim.log;
  * General-purpose logger.
  */
 public interface Logger {
+    public String message = "";
 
     /**
      * Log a formatted message.
