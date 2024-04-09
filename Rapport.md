@@ -142,8 +142,20 @@ Le patron de conception "Méthode de Fabrique" centralise le processus de créat
 ## Exercices 7
 
 ## Exercices 8
-Effectuer un commit avant
+La classe Context suit le patron de conception "Factory Method" (Méthode de Fabrique) vis-à-vis de l'outil ServiceLoader.
 
+Modifications appliqués, les new sont changés par la méthode context.inject(Class)
+````java
+Bike bike = Context.inject(SimpleBike.class);
+````
+````java
+TagAlongBike tag = Context.inject(TagAlongBike.class);
+````
+
+Concernant le fichier fr.polytech.sim.cycling.Bike,  il est en effet possible d'avoir plusieurs lignes.
+Chaque ligne correspond à une implémentation spécifique de l'interface Bike. Chaque implémentation est spécifiée par son nom de classe complet. L'outil ServiceLoader charge toutes les implémentations spécifiées dans ce fichier et les rend disponibles pour l'injection de dépendance via la classe Context. Chaque ligne dans ce fichier correspond donc à une implémentation de la classe Bike que le programme peut utiliser.
+
+Effectuer un commit avant
 ## Exercices 9
 
 
