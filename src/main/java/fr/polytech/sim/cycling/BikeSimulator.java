@@ -12,16 +12,22 @@ import fr.polytech.sim.utils.Context;
  */
 public class BikeSimulator implements Simulation {
     private final TimestampedLoggerDecorator logger = new TimestampedLoggerDecorator(LoggerFactory.createLogger("BikeSimulator"));
+    private final Bike bike;
+    //private final Bike tagAlongBike;
+
+    public BikeSimulator(Bike bike) {
+        this.bike = bike;
+        //this.tagAlongBike = tagAlongBike;
+    }
 
     public void run() {
-        Bike bike = Context.inject(SimpleBike.class);
 
+        System.out.println("Test simpleBike");
         this.logger.log("Bike's speed %.2f Km/h.", bike.getVelocity());
         this.logger.log("Bike's mass %.2f Kg.", bike.getMass());
 
-        System.out.println("Test TagAlongBike");
-        TagAlongBike tag = Context.inject(TagAlongBike.class);
-        this.logger.log("Bike's speed %.2f Km/h.", tag.getVelocity());
-        this.logger.log("Bike's mass %.2f Kg.", tag.getMass());
+        /*System.out.println("Test TagAlongBike");
+        this.logger.log("Bike's speed %.2f Km/h.", tagAlongBike.getVelocity());
+        this.logger.log("Bike's mass %.2f Kg.", tagAlongBike.getMass());*/
     }
 }
