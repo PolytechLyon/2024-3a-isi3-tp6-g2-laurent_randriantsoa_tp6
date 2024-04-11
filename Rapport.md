@@ -141,21 +141,48 @@ Le patron de conception "Méthode de Fabrique" centralise le processus de créat
 
 ## Exercices 7
 
+La classe `TimestampedLoggerDecorator` est un décorateur de Logger qui ajoute un timestamp à chaque message loggé.
+````java
+public class TimestampedLoggerDecorator implements Logger {
+
+    protected Logger logger;
+
+    public TimestampedLoggerDecorator(Logger logger) {
+        this.logger = logger;
+    }
+
+    private String addTimestamp(String message) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        return "[" + formattedTime + "] " + message;
+    }
+
+    @Override
+    public void log(String format, Object... args) {
+        String timestampedMessage = addTimestamp(this.logger.message);
+        this.logger.log(timestampedMessage,args);
+    }
+}
+
+````
+
+Afin d'utiliser cette classe, dans la classe BikeSimulator :
+ ````java
+    private final TimestampedLoggerDecorator logger = new TimestampedLoggerDecorator(LoggerFactory.createLogger("BikeSimulator"));
+````
+
 ## Exercices 8
 La classe Context suit le patron de conception "Factory Method" (Méthode de Fabrique) vis-à-vis de l'outil ServiceLoader.
+Grâce au fichier fr.polytech.sim.cycling.Bike, le ServiceLoader charge toutes les implémentations de Bike spécifiées dans ce fichier et les rend disponibles pour l'injection de dépendance via la classe Context.
 
-Modifications appliqués, les new sont changés par la méthode context.inject(Class)
+Ainsi, pour instancier un nouveau Bike, le new Bike() est changé par la méthode context.inject(Bike.Class)
 ````java
-Bike bike = Context.inject(SimpleBike.class);
+Bike bike = Context.inject(Bike.class);
 ````
-````java
-TagAlongBike tag = Context.inject(TagAlongBike.class);
-````
+Etant donné que dans le fichier fr.polytech.sim.cycling.Bike, la classe SimpleBike est donnée, cette injection instancie un SimpleBike.
 
-Concernant le fichier fr.polytech.sim.cycling.Bike,  il est en effet possible d'avoir plusieurs lignes.
-Chaque ligne correspond à une implémentation spécifique de l'interface Bike. Chaque implémentation est spécifiée par son nom de classe complet. L'outil ServiceLoader charge toutes les implémentations spécifiées dans ce fichier et les rend disponibles pour l'injection de dépendance via la classe Context. Chaque ligne dans ce fichier correspond donc à une implémentation de la classe Bike que le programme peut utiliser.
+Il est possible d'avoir plusieurs lignes sur ce fichier, chaque ligne correspond à une implémentation spécifique de l'interface Bike. Chaque implémentation est spécifiée par son nom de classe complet. L'outil ServiceLoader charge toutes les implémentations spécifiées dans ce fichier et les rend disponibles pour l'injection de dépendance via la classe Context. Chaque ligne dans ce fichier correspond donc à une implémentation de la classe Bike que le programme peut utiliser.
 
-Effectuer un commit avant
 ## Exercices 9
 
 
