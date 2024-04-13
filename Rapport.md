@@ -185,4 +185,36 @@ Il est possible d'avoir plusieurs lignes sur ce fichier, chaque ligne correspond
 
 ## Exercices 9
 
+La méthode injectAll() propose un patron de conception appelé "Iterator" pour parcourir tous les objets d'un type donné disponibles dans le contexte applicatif.
 
+Fonction injectAll :
+````java
+    public static <T> Iterator<T> injectAll(Class<T> klass) {
+        ServiceLoader<T> serviceLoader = ServiceLoader.load(klass);
+        Iterator<T> iterator = serviceLoader.iterator();
+        if (!iterator.hasNext()) {
+            return Collections.emptyIterator();
+        }
+        return iterator;
+    }
+````
+Utilisation de la fonction injectAll :
+````java
+        Iterator<Bike> bikeIterator = Context.injectAll(Bike.class);
+````
+Modficiation du constructeur de la classe bikeSimulator
+````java
+    public BikeSimulator(Iterator<Bike> bikeIterator) {
+    if (bikeIterator.hasNext()) {
+        this.bike = bikeIterator.next();
+    } else {
+        throw new IllegalArgumentException("Il n'y a pas assez de vélos dans l'itérateur.");
+    }
+
+    if (bikeIterator.hasNext()) {
+        this.tag = bikeIterator.next();
+    } else {
+        throw new IllegalArgumentException("Il n'y a pas assez de vélos dans l'itérateur.");
+    }
+}
+````
