@@ -3,7 +3,7 @@ package fr.polytech.sim.transport;
 import fr.polytech.sim.Clock;
 import fr.polytech.sim.log.ConsoleLogger;
 import fr.polytech.sim.log.Logger;
-import fr.polytech.sim.log.LoggerFactory;
+//import fr.polytech.sim.log.LoggerFactory;
 
 import java.util.Objects;
 
@@ -14,7 +14,8 @@ import java.util.Objects;
 public class Wheel implements MobileObject {
     private static final double DEFAULT_MASSE = 10;
 
-    private final Logger logger = LoggerFactory.createLogger("Wheel");
+//    private final Logger logger = LoggerFactory.createLogger("Wheel");
+    private final Logger logger = new ConsoleLogger("Wheel");
     private final Clock clock = Clock.getClock();
     private final Vehicle drive;
 

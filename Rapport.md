@@ -1,15 +1,16 @@
-TP6 ISI
-LAURENT Clément / RANDRIANTSOA Matthieu
+**LAURENT Clément / RANDRIANTSOA Matthieu**
 
 # Compte Rendu du TP 1 : Patrons de Conceptions
 
-## Exercices 1
-Cette conception suit le design pattern composite.
-Il n'y a pas besoin d'implémenter les méthodes getMass et getVelocity puisqu'elles sont déjà implémentées de façon générique dans la classe Vehicule que la classe Bike extend.
+## Exercice 1
+Cette conception suit le Design Pattern Composite.
+
+Dans ce modèle, `MobileObject` agit en tant que `composant`, fournissant le comportement de base pour tous les objets mobiles. Tandis que `Vehicle` agit comme un `composite`, organisant et gérant les différentes instances de `MobileObject`. Dans notre contexte, les feuilles et les composites sont représentés par la même classe.
+
+Il n'y a pas besoin d'implémenter les méthodes `getMass()` et `getVelocity()` puisqu'elles sont déjà implémentées de façon générique dans la classe `Vehicule` que la classe `Bike` extend.
 
 ```java
-public class TagAlongBike extends SimpleBike{
-
+public class TagAlongBike extends SimpleBike {
     public TagAlongBike() {
         components.add(new SimpleBike());
     }
