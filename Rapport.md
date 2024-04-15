@@ -19,20 +19,18 @@ public class TagAlongBike extends SimpleBike {
 
 ## Exercices 2
 
-Nous allons pouvoir parcourir les composants peu importe si nous utilisons un set ou une liste. Ce pettern correspond au pattern Iterator. Il n'y a pas besoin de modifier la méthode getVelocity.
+La méthode utilise le Design Pattern Iterator.
+
+De ce fait, nous allons pouvoir parcourir les composants indépendamment de leur structure interne et donc pouvoir utiliser un set ou une liste. Ainsi, il n'y a pas besoin de modifier la méthode `getVelocity()`.
 
 Avant modification de la classe `Vehicule` :
 
 ````java
-import java.util.HashSet;
-
 protected final Set<MobileObject> components = new HashSet<>();
 ````
 Après modification :
-````java
-import java.util.List;
-import java.util.ArrayList;
 
+````java
 protected final List<MobileObject> components = new ArrayList<>();
 ````
 

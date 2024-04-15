@@ -11,9 +11,8 @@ import java.util.*;
 public abstract class Vehicle implements MobileObject {
 
 //    private final Logger logger = LoggerFactory.createLogger("Vehicle");
-//    protected final List<MobileObject> components = new ArrayList<>();
+    protected final List<MobileObject> components = new ArrayList<>();
     private final Logger logger = new ConsoleLogger("Vehicle");
-    protected final Set<MobileObject> components = new HashSet<>();
 
     /**
      * Force applied to push the vehicle.
