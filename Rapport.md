@@ -35,30 +35,39 @@ protected final List<MobileObject> components = new ArrayList<>();
 ````
 
 ## Exercices 3
-Modifications appliquées sur la classe `Clock` afin qu'elle respecte le design pattern Singleton et qu'elle ne soit instanciable qu'une seule fois.
+Modifications appliquées sur la classe `Clock` afin qu'elle respecte le Design Pattern Singleton et qu'elle ne soit instanciable qu'une seule fois.
 
 ````java
-private static Clock instance;
+public class Clock {
+    private static Clock instance;
 
-private Clock () {
-    Clock.instance = new Clock();
-}
-
-public static Clock getClock() {
-    if (Clock.instance == null) {
-        new Clock();
+    private Clock() {
     }
-    return Clock.instance;
-}
 
+    public static Clock getClock() {
+        if (instance == null) {
+            instance = new Clock();
+        }
+        return instance;
+    }
+
+    // ...
+}
 ````
 
+1) Le constructeur de la classe est rendu privé pour empêcher l'instanciation
+2) Une variable statique de la classe est déclarée pour stocker l'unique instance de la classe.
+3) Une méthode statique `getClock()` est fournie pour récupérer l'instance unique de la classe. Cette méthode vérifie d'abord si une instance existe déjà. Si c'est le cas, elle retourne cette instance. Sinon, elle crée une nouvelle instance en appelant le constructeur privé et la stocke dans la variable statique et la retourne ensuite.
+
+Dans `Wheel`, on remplace l'instanciation de `Clock` par l'appel de la méthode `getClock()` pour obtenir l'instance unique de `Clock`.
 
 Avant modification de la classe `Wheel` :
 ````java
 private final Clock clock = new Clock();
 ````
+
 Après modification :
+
 ````java
 private final Clock clock = Clock.getClock();
 ````
