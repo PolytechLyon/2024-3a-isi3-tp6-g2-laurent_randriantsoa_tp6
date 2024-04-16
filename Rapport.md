@@ -186,17 +186,18 @@ Afin d'utiliser ce décorateur dans les classes :
 private final TimestampedLoggerDecorator logger = new TimestampedLoggerDecorator(LoggerFactory.createLogger("BikeSimulator"));
 ```
 
-## Exercices 8
-La classe Context suit le patron de conception "Factory Method" (Méthode de Fabrique) vis-à-vis de l'outil ServiceLoader.
-Grâce au fichier fr.polytech.sim.cycling.Bike, le ServiceLoader charge toutes les implémentations de Bike spécifiées dans ce fichier et les rend disponibles pour l'injection de dépendance via la classe Context.
+## Exercice 8
+La classe `Context` suit le patron de conception Façade (Facade) vis-à-vis de l'outil ServiceLoader. La classe `Context` sert alors d'interface unifiée pour utiliser des fonctionnalités porposées par le ServiceLoader.
 
-Ainsi, pour instancier un nouveau Bike, le new Bike() est changé par la méthode context.inject(Bike.Class)
-````java
+Ainsi, pour instancier Bike, l'appel de constructeur `new Bike()` est remplacé par la méthode `context.inject(Bike.Class)`.
+
+```java
 Bike bike = Context.inject(Bike.class);
-````
-Etant donné que dans le fichier fr.polytech.sim.cycling.Bike, la classe SimpleBike est donnée, cette injection instancie un SimpleBike.
+```
 
-Il est possible d'avoir plusieurs lignes sur ce fichier, chaque ligne correspond à une implémentation spécifique de l'interface Bike. Chaque implémentation est spécifiée par son nom de classe complet. L'outil ServiceLoader charge toutes les implémentations spécifiées dans ce fichier et les rend disponibles pour l'injection de dépendance via la classe Context. Chaque ligne dans ce fichier correspond donc à une implémentation de la classe Bike que le programme peut utiliser.
+Grâce au fichier fr.polytech.sim.cycling.Bike, nous pouvons spécifier l'implémentation de l'interface Bike à utiliser. Ainsi, remplacer SimpleBike par TagAlongBike dans le fichier fr.polytech.sim.cycling.Bike permet de changer l'implémentation de Bike sans modifier le code source.
+
+Il est possible d'avoir plusieurs lignes sur ce fichier, chaque ligne correspond à une implémentation spécifique de l'interface Bike. Cependant, seule la première ligne est prise en compte.
 
 ## Exercices 9
 

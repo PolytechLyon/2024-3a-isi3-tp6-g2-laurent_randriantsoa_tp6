@@ -17,8 +17,6 @@ public class Application {
      * @param args  app's arguments.
      */
     public static void main(String... args) {
-        Iterator<Bike> bikeIterator = Context.injectAll(Bike.class);
-        //Bike bike = Context.inject(Bike.class);
-        new BikeSimulator(bikeIterator).run();
+        new BikeSimulator().run();
     }
 }
