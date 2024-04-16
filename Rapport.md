@@ -136,25 +136,23 @@ protected void writeMessage(String message) {
 }
 ```
 
-## Exercices 6
+## Exercice 6
 
-Interface LoggerFactory
+On utilise la méthode de fabrique statique (Static Factory Method) pour centraliser la création de l'objet `Logger` au sein d'une interface `LoggerFactory`.
+
 ```java
-package fr.polytech.sim.log;
-
 public interface LoggerFactory {
-
     static Logger createLogger(String name) {
         return new ConsoleLogger(name);
     }
-
 }
-
-
 ```
-De plus on modifie tous les new Logger par des LoggerFactory.creatLogger()
 
-Le patron de conception "Méthode de Fabrique" centralise le processus de création d'objets en fournissant une interface commune avec une méthode abstraite pour créer des instances, tandis que les sous-classes concrètes fournissent l'implémentation spécifique. Il permet de déléguer la création d'objets à des sous-classes tout en préservant l'encapsulation. Contrairement au patron Singleton qui garantit une seule instance d'une classe, la méthode de fabrique est utilisée pour créer des instances variées d'une même interface ou classe abstraite. Ce patron offre une flexibilité dans le choix de l'implémentation des objets, favorisant ainsi la maintenabilité et la réutilisabilité du code. Son utilisation centralise le choix de la réalisation d'une interface à un seul endroit dans le code.
+De plus, on modifie tous les appels de constructeur `new Logger()` par la méthode `LoggerFactory.createLogger()`
+
+Le patron de conception "Méthode de Fabrique" centralise le processus de création d'objets en fournissant une interface commune avec une méthode pour créer des instances. Son utilisation centralise le choix de la réalisation d'une interface à un seul endroit dans le code.
+
+Le patron Singleton, quant à lui, garantit une seule instance d'une classe et fournit un point d'accès global à cette instance.
 
 ## Exercices 7
 
