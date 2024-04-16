@@ -154,13 +154,13 @@ Le patron de conception "Méthode de Fabrique" centralise le processus de créat
 
 Le patron Singleton, quant à lui, garantit une seule instance d'une classe et fournit un point d'accès global à cette instance.
 
-## Exercices 7
+## Exercice 7
 
-La classe `TimestampedLoggerDecorator` est un décorateur de Logger qui ajoute un timestamp à chaque message loggé.
-````java
+La classe `TimestampedLoggerDecorator` est un décorateur de `Logger` qui ajoute un timestamp à chaque message loggé.
+```java
 public class TimestampedLoggerDecorator implements Logger {
 
-    protected Logger logger;
+    private final Logger logger;
 
     public TimestampedLoggerDecorator(Logger logger) {
         this.logger = logger;
@@ -169,22 +169,22 @@ public class TimestampedLoggerDecorator implements Logger {
     private String addTimestamp(String message) {
         LocalDateTime currentTime = LocalDateTime.now();
         String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        return "[" + formattedTime + "] " + message;
+        return String.format("[%s] %s", formattedTime, message);
     }
 
     @Override
     public void log(String format, Object... args) {
-        String timestampedMessage = addTimestamp(this.logger.message);
-        this.logger.log(timestampedMessage,args);
+        String timestampedMessage = addTimestamp(format);
+        this.logger.log(timestampedMessage, args);
     }
 }
+```
 
-````
+Afin d'utiliser ce décorateur dans les classes :
 
-Afin d'utiliser cette classe, dans la classe BikeSimulator :
- ````java
-    private final TimestampedLoggerDecorator logger = new TimestampedLoggerDecorator(LoggerFactory.createLogger("BikeSimulator"));
-````
+ ```java
+private final TimestampedLoggerDecorator logger = new TimestampedLoggerDecorator(LoggerFactory.createLogger("BikeSimulator"));
+```
 
 ## Exercices 8
 La classe Context suit le patron de conception "Factory Method" (Méthode de Fabrique) vis-à-vis de l'outil ServiceLoader.

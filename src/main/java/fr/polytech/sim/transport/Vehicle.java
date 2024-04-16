@@ -3,6 +3,8 @@ package fr.polytech.sim.transport;
 import fr.polytech.sim.log.ConsoleLogger;
 import fr.polytech.sim.log.Logger;
 import fr.polytech.sim.log.LoggerFactory;
+import fr.polytech.sim.log.TimestampedLoggerDecorator;
+
 import java.util.*;
 
 /**
@@ -10,7 +12,7 @@ import java.util.*;
  */
 public abstract class Vehicle implements MobileObject {
 
-    private final Logger logger = LoggerFactory.createLogger("Vehicle");
+    private final Logger logger = new TimestampedLoggerDecorator(LoggerFactory.createLogger("Vehicle"));
     protected final List<MobileObject> components = new ArrayList<>();
 
     /**

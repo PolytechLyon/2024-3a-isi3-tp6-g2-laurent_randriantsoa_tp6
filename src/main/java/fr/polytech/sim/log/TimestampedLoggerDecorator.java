@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 public class TimestampedLoggerDecorator implements Logger {
 
-    protected Logger logger;
+    private final Logger logger;
 
     public TimestampedLoggerDecorator(Logger logger) {
         this.logger = logger;
@@ -14,12 +14,12 @@ public class TimestampedLoggerDecorator implements Logger {
     private String addTimestamp(String message) {
         LocalDateTime currentTime = LocalDateTime.now();
         String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        return "[" + formattedTime + "] " + message;
+        return String.format("[%s] %s", formattedTime, message);
     }
 
     @Override
     public void log(String format, Object... args) {
-        String timestampedMessage = addTimestamp(this.logger.message);
+        String timestampedMessage = addTimestamp(format);
         this.logger.log(timestampedMessage, args);
     }
 }
