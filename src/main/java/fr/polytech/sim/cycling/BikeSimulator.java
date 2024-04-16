@@ -16,15 +16,12 @@ public class BikeSimulator implements Simulation {
     private final TimestampedLoggerDecorator logger = new TimestampedLoggerDecorator(LoggerFactory.createLogger("BikeSimulator"));
 
     public void run() {
-        Bike bike = Context.inject(Bike.class);
+        Iterator<Bike> bikeIterator = Context.injectAll(Bike.class);
 
-        // Vérifier si l'injection a réussi
-        if (bike == null) {
-            this.logger.log("Failed to inject Bike instance.");
-            return;
+        while (bikeIterator.hasNext()) {
+            Bike bike = bikeIterator.next();
+            this.logger.log("Bike's speed %.2f Km/h.", bike.getVelocity());
+            this.logger.log("Bike's mass %.2f Kg.", bike.getMass());
         }
-
-        this.logger.log("Bike's speed %.2f Km/h.", bike.getVelocity());
-        this.logger.log("Bike's mass %.2f Kg.", bike.getMass());
     }
 }

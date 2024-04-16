@@ -34,11 +34,6 @@ public class Context {
      * @param <T>   expected instance type
      */
     public static <T> Iterator<T> injectAll(Class<T> klass) {
-        ServiceLoader<T> serviceLoader = ServiceLoader.load(klass);
-        Iterator<T> iterator = serviceLoader.iterator();
-        if (!iterator.hasNext()) {
-            return Collections.emptyIterator();
-        }
-        return iterator;
+        return ServiceLoader.load(klass).iterator();
     }
 }

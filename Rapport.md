@@ -199,38 +199,29 @@ Grâce au fichier fr.polytech.sim.cycling.Bike, nous pouvons spécifier l'implé
 
 Il est possible d'avoir plusieurs lignes sur ce fichier, chaque ligne correspond à une implémentation spécifique de l'interface Bike. Cependant, seule la première ligne est prise en compte.
 
-## Exercices 9
+## Exercice 9
 
-La méthode injectAll() propose un patron de conception appelé "Iterator" pour parcourir tous les objets d'un type donné disponibles dans le contexte applicatif.
+Le type de retour de la méthode `injectAll(Class<T> klass)` est un `Iterator<T>`. Ce choix de conception suggère l'utilisation du patron de conception Iterator.
 
-Fonction injectAll :
-````java
-    public static <T> Iterator<T> injectAll(Class<T> klass) {
-        ServiceLoader<T> serviceLoader = ServiceLoader.load(klass);
-        Iterator<T> iterator = serviceLoader.iterator();
-        if (!iterator.hasNext()) {
-            return Collections.emptyIterator();
-        }
-        return iterator;
-    }
-````
-Utilisation de la fonction injectAll :
-````java
-        Iterator<Bike> bikeIterator = Context.injectAll(Bike.class);
-````
-Modficiation du constructeur de la classe bikeSimulator
-````java
-    public BikeSimulator(Iterator<Bike> bikeIterator) {
-    if (bikeIterator.hasNext()) {
-        this.bike = bikeIterator.next();
-    } else {
-        throw new IllegalArgumentException("Il n'y a pas assez de vélos dans l'itérateur.");
-    }
+La méthode `injectAll()` permet de parcourir tous les objets d'un type donné disponibles dans le contexte applicatif.
 
-    if (bikeIterator.hasNext()) {
-        this.tag = bikeIterator.next();
-    } else {
-        throw new IllegalArgumentException("Il n'y a pas assez de vélos dans l'itérateur.");
+
+```java
+public static <T> Iterator<T> injectAll(Class<T> klass) {
+    return serviceLoader = ServiceLoader.load(klass).iterator();
+}
+```
+
+Utilisation de l'injection de dépendance :
+
+```java
+ public void run() {
+    Iterator<Bike> bikeIterator = Context.injectAll(Bike.class);
+
+    while (bikeIterator.hasNext()) {
+        Bike bike = bikeIterator.next();
+        this.logger.log("Bike's speed %.2f Km/h.", bike.getVelocity());
+        this.logger.log("Bike's mass %.2f Kg.", bike.getMass());
     }
 }
-````
+```
