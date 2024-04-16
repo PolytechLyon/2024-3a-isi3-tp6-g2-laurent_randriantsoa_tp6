@@ -17,7 +17,7 @@ public class TagAlongBike extends SimpleBike {
 }
 ```
 
-## Exercices 2
+## Exercice 2
 
 La méthode utilise le Design Pattern Iterator.
 
@@ -34,7 +34,7 @@ Après modification :
 protected final List<MobileObject> components = new ArrayList<>();
 ````
 
-## Exercices 3
+## Exercice 3
 Modifications appliquées sur la classe `Clock` afin qu'elle respecte le Design Pattern Singleton et qu'elle ne soit instanciable qu'une seule fois.
 
 ````java
@@ -72,24 +72,29 @@ Après modification :
 private final Clock clock = Clock.getClock();
 ````
 
-## Exercices 4
-La classe Bike est dans le package cycling tandis que la classe vehicule se trouve dans le package transport.
-De plus la classe Bike extend la classe Vehicule qui est quand à elle une classe abstraite. C'est une dépendance cyclique.
-C'est une mauvaise pratique car les dépendances cycliques rendent le code plus complexe et difficile à réutiliser, de plus cela accru les risque de bugs et complexifie les tests.
+## Exercice 4
+La classe `Bike` est dans le package `cycling` tandis que la classe `Vehicule` se trouve dans le package `transport`.
 
-La class Bike possède la fonction getPush qui est utilisée dans la class Wheel
+De plus la classe `Bike` hérite de la classe `Vehicule` qui est quant à elle une classe `abstraite`. Et la classe `Wheel` dépend de la classe `Bike`. Nous sommes donc en présence d'une dépendance cyclique.
 
-Pour casser cette dépendance nous allons utiliser le principe d'inverser de dépendance.
+C'est une mauvaise pratique car les dépendances cycliques violent le principe de fermeture commune. Elles rendent le code plus complexe et difficile à maintenir. De plus cela accru les risque de bugs et complexifie les tests.
+
+Pour casser cette dépendance, nous allons introduire une indirectionn en utilisant l'inversion de dépendance. 
+Nous déplaçons la dépendance de `Bike` vers `Vehicule`, puisque `Bike` hérite de `Vehicule` et que `Vehicule` se trouve dans le même package que `Wheel`.
+
+Ansi, toute mention de `Bike` dans `Wheel` sera remplacé par `Vehicule` afin d'utiliser la méthode `getPush()` de `Vehicule` plutôt que de `Bike`.
 
 Avant :
+
 ````java
 private final Bike drive;
 ````
+
 Après :
+
 ````java
 private final Vehicule drive;
 ````
-De même, toute mention de Bike sera remplacé par Vehicule afin d'utiliser le getPush de vehicule plutôt que de Bike afin de ne plus avoir besoin de l'import de Bike.
 
 ## Exercices 5
 
