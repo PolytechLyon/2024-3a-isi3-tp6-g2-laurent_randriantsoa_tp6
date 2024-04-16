@@ -14,31 +14,14 @@ import java.util.Iterator;
  */
 public class BikeSimulator implements Simulation {
     private final TimestampedLoggerDecorator logger = new TimestampedLoggerDecorator(LoggerFactory.createLogger("BikeSimulator"));
-    private final Bike bike;
-    private final Bike tag;
-
-    public BikeSimulator(Iterator<Bike> bikeIterator) {
-        if (bikeIterator.hasNext()) {
-            this.bike = bikeIterator.next();
-        } else {
-            throw new IllegalArgumentException("Il n'y a pas assez de vélos dans l'itérateur.");
-        }
-
-        if (bikeIterator.hasNext()) {
-            this.tag = bikeIterator.next();
-        } else {
-            throw new IllegalArgumentException("Il n'y a pas assez de vélos dans l'itérateur.");
-        }
-    }
 
     public void run() {
+        Iterator<Bike> bikeIterator = Context.injectAll(Bike.class);
 
-        System.out.println("Test simpleBike");
-        this.logger.log("Bike's speed %.2f Km/h.", bike.getVelocity());
-        this.logger.log("Bike's mass %.2f Kg.", bike.getMass());
-
-        System.out.println("Test TagAlongBike");
-        this.logger.log("Bike's speed %.2f Km/h.", this.tag.getVelocity());
-        this.logger.log("Bike's mass %.2f Kg.", this.tag.getMass());
+        while (bikeIterator.hasNext()) {
+            Bike bike = bikeIterator.next();
+            this.logger.log("Bike's speed %.2f Km/h.", bike.getVelocity());
+            this.logger.log("Bike's mass %.2f Kg.", bike.getMass());
+        }
     }
 }

@@ -1,152 +1,166 @@
-TP6 ISI
-LAURENT Clément / RANDRIANTSOA Matthieu
+**LAURENT Clément / RANDRIANTSOA Matthieu**
 
 # Compte Rendu du TP 1 : Patrons de Conceptions
 
-## Exercices 1
-Cette conception suit le design pattern composite.
-Il n'y a pas besoin d'implémenter les méthodes getMass et getVelocity puisqu'elles sont déjà implémentées de façon générique dans la classe Vehicule que la classe Bike extend.
+## Exercice 1
+Cette conception suit le Design Pattern Composite.
+
+Dans ce modèle, `MobileObject` agit en tant que `composant`, fournissant le comportement de base pour tous les objets mobiles. Tandis que `Vehicle` agit comme un `composite`, organisant et gérant les différentes instances de `MobileObject`. Dans notre contexte, les feuilles et les composites sont représentés par la même classe.
+
+Il n'y a pas besoin d'implémenter les méthodes `getMass()` et `getVelocity()` puisqu'elles sont déjà implémentées de façon générique dans la classe `Vehicule` que la classe `Bike` extend.
 
 ```java
-public class TagAlongBike extends SimpleBike{
-
+public class TagAlongBike extends SimpleBike {
     public TagAlongBike() {
         components.add(new SimpleBike());
     }
 }
 ```
 
-## Exercices 2
+## Exercice 2
 
-Nous allons pouvoir parcourir les composants peu importe si nous utilisons un set ou une liste. Ce pettern correspond au pattern Iterator. Il n'y a pas besoin de modifier la méthode getVelocity.
+La méthode utilise le Design Pattern Iterator.
+
+De ce fait, nous allons pouvoir parcourir les composants indépendamment de leur structure interne et donc pouvoir utiliser un set ou une liste. Ainsi, il n'y a pas besoin de modifier la méthode `getVelocity()`.
 
 Avant modification de la classe `Vehicule` :
 
 ````java
-import java.util.HashSet;
-
 protected final Set<MobileObject> components = new HashSet<>();
 ````
 Après modification :
-````java
-import java.util.List;
-import java.util.ArrayList;
 
+````java
 protected final List<MobileObject> components = new ArrayList<>();
 ````
 
-## Exercices 3
-Modifications appliquées sur la classe `Clock` afin qu'elle respecte le design pattern Singleton et qu'elle ne soit instanciable qu'une seule fois.
+## Exercice 3
+Modifications appliquées sur la classe `Clock` afin qu'elle respecte le Design Pattern Singleton et qu'elle ne soit instanciable qu'une seule fois.
 
 ````java
-private static Clock instance;
+public class Clock {
+    private static Clock instance;
 
-private Clock () {
-    Clock.instance = new Clock();
-}
-
-public static Clock getClock() {
-    if (Clock.instance == null) {
-        new Clock();
+    private Clock() {
     }
-    return Clock.instance;
-}
 
+    public static Clock getClock() {
+        if (instance == null) {
+            instance = new Clock();
+        }
+        return instance;
+    }
+
+    // ...
+}
 ````
 
+1) Le constructeur de la classe est rendu privé pour empêcher l'instanciation
+2) Une variable statique de la classe est déclarée pour stocker l'unique instance de la classe.
+3) Une méthode statique `getClock()` est fournie pour récupérer l'instance unique de la classe. Cette méthode vérifie d'abord si une instance existe déjà. Si c'est le cas, elle retourne cette instance. Sinon, elle crée une nouvelle instance en appelant le constructeur privé et la stocke dans la variable statique et la retourne ensuite.
+
+Dans `Wheel`, on remplace l'instanciation de `Clock` par l'appel de la méthode `getClock()` pour obtenir l'instance unique de `Clock`.
 
 Avant modification de la classe `Wheel` :
 ````java
 private final Clock clock = new Clock();
 ````
+
 Après modification :
+
 ````java
 private final Clock clock = Clock.getClock();
 ````
 
-## Exercices 4
-La classe Bike est dans le package cycling tandis que la classe vehicule se trouve dans le package transport.
-De plus la classe Bike extend la classe Vehicule qui est quand à elle une classe abstraite. C'est une dépendance cyclique.
-C'est une mauvaise pratique car les dépendances cycliques rendent le code plus complexe et difficile à réutiliser, de plus cela accru les risque de bugs et complexifie les tests.
+## Exercice 4
+La classe `Bike` est dans le package `cycling` tandis que la classe `Vehicule` se trouve dans le package `transport`.
 
-La class Bike possède la fonction getPush qui est utilisée dans la class Wheel
+De plus la classe `Bike` hérite de la classe `Vehicule` qui est quant à elle une classe `abstraite`. Et la classe `Wheel` dépend de la classe `Bike`. Nous sommes donc en présence d'une dépendance cyclique.
 
-Pour casser cette dépendance nous allons utiliser le principe d'inverser de dépendance.
+C'est une mauvaise pratique car les dépendances cycliques violent le principe de fermeture commune. Elles rendent le code plus complexe et difficile à maintenir. De plus cela accru les risque de bugs et complexifie les tests.
+
+Pour casser cette dépendance, nous allons introduire une indirectionn en utilisant l'inversion de dépendance. 
+Nous déplaçons la dépendance de `Bike` vers `Vehicule`, puisque `Bike` hérite de `Vehicule` et que `Vehicule` se trouve dans le même package que `Wheel`.
+
+Ansi, toute mention de `Bike` dans `Wheel` sera remplacé par `Vehicule` afin d'utiliser la méthode `getPush()` de `Vehicule` plutôt que de `Bike`.
 
 Avant :
+
 ````java
 private final Bike drive;
 ````
+
 Après :
+
 ````java
 private final Vehicule drive;
 ````
-De même, toute mention de Bike sera remplacé par Vehicule afin d'utiliser le getPush de vehicule plutôt que de Bike afin de ne plus avoir besoin de l'import de Bike.
 
-## Exercices 5
+## Exercice 5
 
-Modifications apportées :
+Afin de suivre le patron de conception patron de méthode (Template Method) :
+- Nous avons repris la méthode `log()` de `NamedLogger` pour séparer la logique de formatage du message de la logique d'écriture du message.
 
-Classe `NamedLogger`
-
-Le message est enregistré en tant qu'attribut pour pouvoir être récupéré facilement par ses sous-classes. 
 ```java
-public String message;
-
 @Override
 public void log(String format, Object... args) {
     String entry = String.format(format, args);
-    this.message = String.format("%s\t%s\n", this.name, entry);
+    String message = formatMessage(entry);
+    writeMessage(message);
 }
 ```
-Classe `ConsoleLogger`
+
+- La méthode abstraite `writeMessage()` déclarée dans la classe `NamedLogger` devront être implémentées par les sous-classes.
+
+`FileLogger` :
+
 ```java
 @Override
-public void log(String format, Object... args) {
-    super.log(format, args);
+protected void writeMessage(String message) {
+    synchronized (FileLogger.class) {
+        try (FileWriter fileWriter = new FileWriter(FILE_NAME, true)) {
+            fileWriter.write(message);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+```
+
+`ConsoleLogger` :
+
+```java
+@Override
+protected void writeMessage(String message) {
     System.out.print(message);
 }
 ```
-Classe `FileLogger`
+
+## Exercice 6
+
+On utilise la méthode de fabrique statique (Static Factory Method) pour centraliser la création de l'objet `Logger` au sein d'une interface `LoggerFactory`.
+
 ```java
-@Override
-synchronized public void log(String format, Object... args) {
-    super.log(format, args);
-    try (FileWriter fileWriter = new FileWriter(FILE_NAME, true)) {
-        fileWriter.write(message);
-    } catch (IOException e) {
-        throw new RuntimeException(e);
-    }
-}
-```
-
-## Exercices 6
-
-Interface LoggerFactory
-```java
-package fr.polytech.sim.log;
-
 public interface LoggerFactory {
-
     static Logger createLogger(String name) {
         return new ConsoleLogger(name);
     }
-
 }
-
-
 ```
-De plus on modifie tous les new Logger par des LoggerFactory.creatLogger()
 
-Le patron de conception "Méthode de Fabrique" centralise le processus de création d'objets en fournissant une interface commune avec une méthode abstraite pour créer des instances, tandis que les sous-classes concrètes fournissent l'implémentation spécifique. Il permet de déléguer la création d'objets à des sous-classes tout en préservant l'encapsulation. Contrairement au patron Singleton qui garantit une seule instance d'une classe, la méthode de fabrique est utilisée pour créer des instances variées d'une même interface ou classe abstraite. Ce patron offre une flexibilité dans le choix de l'implémentation des objets, favorisant ainsi la maintenabilité et la réutilisabilité du code. Son utilisation centralise le choix de la réalisation d'une interface à un seul endroit dans le code.
+De plus, on modifie tous les appels de constructeur `new Logger()` par la méthode `LoggerFactory.createLogger()`
 
-## Exercices 7
+Le patron de conception "Méthode de Fabrique" centralise le processus de création d'objets en fournissant une interface commune avec une méthode pour créer des instances. Son utilisation centralise le choix de la réalisation d'une interface à un seul endroit dans le code.
 
-La classe `TimestampedLoggerDecorator` est un décorateur de Logger qui ajoute un timestamp à chaque message loggé.
-````java
+Le patron Singleton, quant à lui, garantit une seule instance d'une classe et fournit un point d'accès global à cette instance.
+
+## Exercice 7
+
+La classe `TimestampedLoggerDecorator` est un décorateur de `Logger` qui ajoute un timestamp à chaque message loggé.
+```java
 public class TimestampedLoggerDecorator implements Logger {
 
-    protected Logger logger;
+    private final Logger logger;
 
     public TimestampedLoggerDecorator(Logger logger) {
         this.logger = logger;
@@ -155,67 +169,59 @@ public class TimestampedLoggerDecorator implements Logger {
     private String addTimestamp(String message) {
         LocalDateTime currentTime = LocalDateTime.now();
         String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        return "[" + formattedTime + "] " + message;
+        return String.format("[%s] %s", formattedTime, message);
     }
 
     @Override
     public void log(String format, Object... args) {
-        String timestampedMessage = addTimestamp(this.logger.message);
-        this.logger.log(timestampedMessage,args);
+        String timestampedMessage = addTimestamp(format);
+        this.logger.log(timestampedMessage, args);
     }
 }
+```
 
-````
+Afin d'utiliser ce décorateur dans les classes :
 
-Afin d'utiliser cette classe, dans la classe BikeSimulator :
- ````java
-    private final TimestampedLoggerDecorator logger = new TimestampedLoggerDecorator(LoggerFactory.createLogger("BikeSimulator"));
-````
+ ```java
+private final TimestampedLoggerDecorator logger = new TimestampedLoggerDecorator(LoggerFactory.createLogger("BikeSimulator"));
+```
 
-## Exercices 8
-La classe Context suit le patron de conception "Factory Method" (Méthode de Fabrique) vis-à-vis de l'outil ServiceLoader.
-Grâce au fichier fr.polytech.sim.cycling.Bike, le ServiceLoader charge toutes les implémentations de Bike spécifiées dans ce fichier et les rend disponibles pour l'injection de dépendance via la classe Context.
+## Exercice 8
+La classe `Context` suit le patron de conception Façade (Facade) vis-à-vis de l'outil ServiceLoader. La classe `Context` sert alors d'interface unifiée pour utiliser des fonctionnalités porposées par le ServiceLoader.
 
-Ainsi, pour instancier un nouveau Bike, le new Bike() est changé par la méthode context.inject(Bike.Class)
-````java
+Ainsi, pour instancier Bike, l'appel de constructeur `new Bike()` est remplacé par la méthode `context.inject(Bike.Class)`.
+
+```java
 Bike bike = Context.inject(Bike.class);
-````
-Etant donné que dans le fichier fr.polytech.sim.cycling.Bike, la classe SimpleBike est donnée, cette injection instancie un SimpleBike.
+```
 
-Il est possible d'avoir plusieurs lignes sur ce fichier, chaque ligne correspond à une implémentation spécifique de l'interface Bike. Chaque implémentation est spécifiée par son nom de classe complet. L'outil ServiceLoader charge toutes les implémentations spécifiées dans ce fichier et les rend disponibles pour l'injection de dépendance via la classe Context. Chaque ligne dans ce fichier correspond donc à une implémentation de la classe Bike que le programme peut utiliser.
+Grâce au fichier fr.polytech.sim.cycling.Bike, nous pouvons spécifier l'implémentation de l'interface Bike à utiliser. Ainsi, remplacer SimpleBike par TagAlongBike dans le fichier fr.polytech.sim.cycling.Bike permet de changer l'implémentation de Bike sans modifier le code source.
 
-## Exercices 9
+Il est possible d'avoir plusieurs lignes sur ce fichier, chaque ligne correspond à une implémentation spécifique de l'interface Bike. Cependant, seule la première ligne est prise en compte.
 
-La méthode injectAll() propose un patron de conception appelé "Iterator" pour parcourir tous les objets d'un type donné disponibles dans le contexte applicatif.
+## Exercice 9
 
-Fonction injectAll :
-````java
-    public static <T> Iterator<T> injectAll(Class<T> klass) {
-        ServiceLoader<T> serviceLoader = ServiceLoader.load(klass);
-        Iterator<T> iterator = serviceLoader.iterator();
-        if (!iterator.hasNext()) {
-            return Collections.emptyIterator();
-        }
-        return iterator;
-    }
-````
-Utilisation de la fonction injectAll :
-````java
-        Iterator<Bike> bikeIterator = Context.injectAll(Bike.class);
-````
-Modficiation du constructeur de la classe bikeSimulator
-````java
-    public BikeSimulator(Iterator<Bike> bikeIterator) {
-    if (bikeIterator.hasNext()) {
-        this.bike = bikeIterator.next();
-    } else {
-        throw new IllegalArgumentException("Il n'y a pas assez de vélos dans l'itérateur.");
-    }
+Le type de retour de la méthode `injectAll(Class<T> klass)` est un `Iterator<T>`. Ce choix de conception suggère l'utilisation du patron de conception Iterator.
 
-    if (bikeIterator.hasNext()) {
-        this.tag = bikeIterator.next();
-    } else {
-        throw new IllegalArgumentException("Il n'y a pas assez de vélos dans l'itérateur.");
+La méthode `injectAll()` permet de parcourir tous les objets d'un type donné disponibles dans le contexte applicatif.
+
+
+```java
+public static <T> Iterator<T> injectAll(Class<T> klass) {
+    return serviceLoader = ServiceLoader.load(klass).iterator();
+}
+```
+
+Utilisation de l'injection de dépendance :
+
+```java
+ public void run() {
+    Iterator<Bike> bikeIterator = Context.injectAll(Bike.class);
+
+    while (bikeIterator.hasNext()) {
+        Bike bike = bikeIterator.next();
+        this.logger.log("Bike's speed %.2f Km/h.", bike.getVelocity());
+        this.logger.log("Bike's mass %.2f Kg.", bike.getMass());
     }
 }
-````
+```
