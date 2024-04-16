@@ -96,40 +96,43 @@ Après :
 private final Vehicule drive;
 ````
 
-## Exercices 5
+## Exercice 5
 
-Modifications apportées :
+Afin de suivre le patron de conception patron de méthode (Template Method) :
+- Nous avons repris la méthode `log()` de `NamedLogger` pour séparer la logique de formatage du message de la logique d'écriture du message.
 
-Classe `NamedLogger`
-
-Le message est enregistré en tant qu'attribut pour pouvoir être récupéré facilement par ses sous-classes. 
 ```java
-public String message;
-
 @Override
 public void log(String format, Object... args) {
     String entry = String.format(format, args);
-    this.message = String.format("%s\t%s\n", this.name, entry);
+    String message = formatMessage(entry);
+    writeMessage(message);
 }
 ```
-Classe `ConsoleLogger`
+
+- La méthode abstraite `writeMessage()` déclarée dans la classe `NamedLogger` devront être implémentées par les sous-classes.
+
+`FileLogger` :
+
 ```java
 @Override
-public void log(String format, Object... args) {
-    super.log(format, args);
-    System.out.print(message);
-}
-```
-Classe `FileLogger`
-```java
-@Override
-synchronized public void log(String format, Object... args) {
-    super.log(format, args);
-    try (FileWriter fileWriter = new FileWriter(FILE_NAME, true)) {
-        fileWriter.write(message);
-    } catch (IOException e) {
-        throw new RuntimeException(e);
+protected void writeMessage(String message) {
+    synchronized (FileLogger.class) {
+        try (FileWriter fileWriter = new FileWriter(FILE_NAME, true)) {
+            fileWriter.write(message);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+}
+```
+
+`ConsoleLogger` :
+
+```java
+@Override
+protected void writeMessage(String message) {
+    System.out.print(message);
 }
 ```
 
