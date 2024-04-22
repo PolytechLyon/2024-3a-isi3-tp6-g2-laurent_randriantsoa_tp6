@@ -1,7 +1,6 @@
 package fr.polytech.sim.utils;
 
-import java.util.Iterator;
-import java.util.ServiceLoader;
+import java.util.*;
 
 /**
  * Simplified dependency injection context.
@@ -35,7 +34,6 @@ public class Context {
      * @param <T>   expected instance type
      */
     public static <T> Iterator<T> injectAll(Class<T> klass) {
-        /* TODO: implement the right logic */
-        throw new UnsupportedOperationException("Method not implemented");
+        return ServiceLoader.load(klass).iterator();
     }
 }
